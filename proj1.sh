@@ -34,7 +34,7 @@ hdd () {
 	i=1
 	while [ $i -lt 7 ]
 	do
-		
+		iostat -h | cut -f 34 -d ' '| sed 's/sda/ /g' | sed 's/ *$//g' | tail -2 | head -1 >> system_metrics.csv
 		((i++))
 	done
 }
