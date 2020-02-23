@@ -16,7 +16,7 @@ cpumem () {
 	i=1
 	while [ $i -lt 7 ]
 	do
-		
+		ps -C APM$i -o %cpu,%mem | sed 's/  /,/g' | tail -1 | echo $SECONDS,$(cut -f 1,2 -d ',') >> "APM$i"_metric.csv
 		((i++))
 	done
 }
