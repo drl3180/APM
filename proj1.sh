@@ -22,21 +22,11 @@ cpumem () {
 }
 
 net () {
-	i=1
-	while [ $i -lt 7 ]
-	do
-		
-		((i++))
-	done
+	ifstat ens33  | tail -n -2 | head -1 | tr -s ' ' | cut -f 6,8 -d ' ' >> temp.txt
 }
 
 hdd () {
-	i=1
-	while [ $i -lt 7 ]
-	do
-		iostat -h | cut -f 34 -d ' '| sed 's/sda/ /g' | sed 's/ *$//g' | tail -2 | head -1 >> system_metrics.csv
-		((i++))
-	done
+	iostat -h | cut -f 34 -d ' '| sed 's/sda/ /g' | sed 's/ *$//g' | tail -2 | head -1 >> system_metrics.csv
 }
 
 cleanup () {
