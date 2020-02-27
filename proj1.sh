@@ -10,6 +10,7 @@ run () {
 		./APM$i $1 &
 		((i++))
 	done
+	ifstat -d 1
 }
 
 cpumem () {
@@ -22,7 +23,7 @@ cpumem () {
 }
 
 net () {
-	ifstat ens33  | tail -n -2 | head -1 | tr -s ' ' | cut -f 6,8 -d ' ' >> temp.txt
+	ifstat ens33  | tail -n -2 | head -1 | tr -s ' ' | cut -f 7,9 -d ' ' | sed 's/K//g' | echo $SECONDS,$(sed 's/ /,/g') >> network_stats.txt
 }
 
 hdd () {
@@ -37,6 +38,7 @@ cleanup () {
 		killall APM$i
 		((i++))
 	done
+	killall ifstat
 }
 trap cleanup EXIT
 
