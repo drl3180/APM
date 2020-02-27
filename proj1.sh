@@ -26,7 +26,8 @@ net () {
 }
 
 hdd () {
-	iostat -h | cut -f 34 -d ' '| sed 's/sda/ /g' | sed 's/ *$//g' | tail -2 | head -1 >> system_metrics.csv
+	iostat sda | tail -n -2 | head -1 | tr -s ' ' | cut -f 5 -d ' ' >> temp.txt
+	df -h -m / | tail -n -1 | tr -s ' ' | cut -f 4 -d ' ' >> temp.txt
 }
 
 cleanup () {
