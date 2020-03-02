@@ -23,13 +23,14 @@ cpumem () {
 }
 
 net () {
-	ifstat ens33  | tail -n -2 | head -1 | tr -s ' ' | cut -f 7,9 -d ' ' | sed 's/K//g' | echo $SECONDS,$(sed 's/ /,/g') >> network_stats.txt
+	net_stats=$(ifstat ens33  | tail -n -2 | head -1 | tr -s ' ' | cut -f 7,9 -d ' ' | sed 's/K//g' | echo $SECONDS,$(sed 's/ /,/g'))
 }
 
 hdd () {
-	iostat sda | tail -n -2 | head -1 | tr -s ' ' | cut -f 5 -d ' ' >> temp.txt
-	df -h -m / | tail -n -1 | tr -s ' ' | cut -f 4 -d ' ' >> temp.txt
+	io=$(iostat sda | tail -n -2 | head -1 | tr -s ' ' | cut -f 5 -d ' ')
+	usage=$(df -h -m / | tail -n -1 | tr -s ' ' | cut -f 4 -d ' ')
 }
+
 
 cleanup () {
 	i=1
@@ -46,7 +47,11 @@ run $1
 
 while [ true ]
 do
-		
+	cpumem
+	net
+	hdd
+	echo "$net_stats,$io,$usage" >> system_metrics.csv
+	echo $SECONDS	
 	sleep 5
 done
 
